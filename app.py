@@ -24,17 +24,13 @@ if not API_KEY:
 # Área de texto para input
 texto_input = st.text_area("Ingresa el texto generado por AI que deseas humanizar:", height=200)
 
-# Slider para el nivel de fuerza de la reescritura
-strength = st.slider("Nivel de reescritura", min_value=1, max_value=4, value=3, 
-                     help="1 = Cambios mínimos, 4 = Cambios máximos")
-
 # Función para humanizar el texto
-def humanizar_texto(texto, nivel_fuerza):
+def humanizar_texto(texto):
     url = "https://api.smodin.io/v1/rewrite/single"
     
     payload = {
         "language": "auto",
-        "strength": nivel_fuerza,
+        "strength": 4,  # Nivel fijo en 4 para máxima reescritura
         "text": texto
     }
     
@@ -55,7 +51,7 @@ def humanizar_texto(texto, nivel_fuerza):
 if st.button("Humanizar"):
     if texto_input:
         with st.spinner('Humanizando el texto...'):
-            resultado = humanizar_texto(texto_input, strength)
+            resultado = humanizar_texto(texto_input)
             
             if "error" in resultado:
                 st.error(resultado["error"])
@@ -72,19 +68,9 @@ if st.button("Humanizar"):
     else:
         st.warning("Por favor, ingresa un texto para humanizar.")
 
-# Información adicional
+# Instrucciones básicas
 st.markdown("---")
 st.markdown("### Instrucciones:")
 st.markdown("1. Pega el texto generado por AI en el área de texto superior")
-st.markdown("2. Ajusta el nivel de reescritura según tus necesidades")
-st.markdown("3. Haz clic en el botón 'Humanizar'")
-st.markdown("4. El texto humanizado aparecerá en el área inferior")
-
-# Información sobre los niveles de reescritura
-st.sidebar.markdown("""
-### Niveles de reescritura:
-- **Nivel 1**: Cambios mínimos al texto original
-- **Nivel 2**: Cambios moderados
-- **Nivel 3**: Cambios significativos
-- **Nivel 4**: Reescritura máxima
-""")
+st.markdown("2. Haz clic en el botón 'Humanizar'")
+st.markdown("3. El texto humanizado aparecerá en el área inferior")
