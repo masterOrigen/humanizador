@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuración de la página
-st.set_page_config(page_title="Humanizador de Texto AI", page_icon="🤖")
+
 
 # Título de la aplicación
 st.title("Humanizador de Texto AI")
