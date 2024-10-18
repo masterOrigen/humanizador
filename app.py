@@ -30,7 +30,7 @@ def humanizar_texto(texto):
     
     payload = {
         "language": "auto",
-        "strength": 4,  # Nivel fijo en 4 para máxima reescritura
+        "strength": 3,  # Nivel fijo en 4 para máxima reescritura
         "text": texto
     }
     
