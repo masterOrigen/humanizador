@@ -46,11 +46,7 @@ def humanizar_texto(texto, nivel_fuerza):
     
     try:
         response = requests.post(url, json=payload, headers=headers)
-        response.raise_for_status()  # Verificar si hay errores en la respuesta
-        
-        # Imprimir la respuesta para depuración
-        st.write("Respuesta de la API (debug):", response.json())
-        
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
         return {"error": f"Error en la solicitud: {str(e)}"}
@@ -64,20 +60,15 @@ if st.button("Humanizar"):
             if "error" in resultado:
                 st.error(resultado["error"])
             else:
-                st.success("¡Texto humanizado exitosamente!")
-                # Intentar obtener el texto reescrito de diferentes maneras posibles
-                texto_humanizado = (
-                    resultado.get("data", {}).get("rewritten") or
-                    resultado.get("rewritten") or
-                    resultado.get("data", {}).get("text") or
-                    resultado.get("text")
-                )
-                
-                if texto_humanizado:
+                try:
+                    # Extraer el texto reescrito de la estructura correcta
+                    texto_humanizado = resultado["rewrites"][0]["rewrite"]
+                    st.success("¡Texto humanizado exitosamente!")
                     st.text_area("Texto humanizado:", value=texto_humanizado, height=200)
-                else:
+                except (KeyError, IndexError) as e:
                     st.error("No se pudo obtener el texto humanizado de la respuesta")
-                    st.json(resultado)  # Mostrar la respuesta completa para depuración
+                    if st.checkbox("Mostrar detalles del error"):
+                        st.json(resultado)
     else:
         st.warning("Por favor, ingresa un texto para humanizar.")
 
